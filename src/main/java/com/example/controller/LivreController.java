@@ -156,7 +156,8 @@ public class LivreController {
     
 
     //add comment
-    @PostMapping("livres/{livreId}/addComment")
+    @PostMapping("/livres/{livreId}/addComment")
+    @PreAuthorize("hasRole('USER')")
     public ModelAndView addComment(@PathVariable Long livreId, @RequestParam String commentContent) {
     	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	    
@@ -178,8 +179,9 @@ public class LivreController {
         return new ModelAndView("redirect:/livres/"+ livreId); 
     }
     
+
     
-    //delete comment
+  //delete comment
     @DeleteMapping("livres/comments/{commentId}")
     public ModelAndView deleteComment(@PathVariable Long commentId, Principal principal) {
         // Retrieve authenticated user
@@ -193,6 +195,82 @@ public class LivreController {
 
         // Redirect back to the Livre detail page
         return new ModelAndView("redirect:/livres/"+livreId); 
+    }
+    
+    //update Comment 
+    @GetMapping("/livres/comments/{commentId}/edit")
+    public ModelAndView editComment(@PathVariable Long commentId, Model model) {
+        // Récupérer le commentaire à modifier à partir du service
+        Comment commentToEdit = commentDAO.getCommentById(commentId);
+
+        // Ajouter le commentaire à modifier au modèle
+        model.addAttribute("comment", commentToEdit);
+
+        // Afficher la page de modification
+        return new ModelAndView("/Comment/editComment", model.asMap());
+        
+    }
+    
+    @PostMapping("/livres/comments/{commentId}/edit")
+    public ModelAndView updateComment(@PathVariable Long commentId, @RequestParam("newContent") String newContent) {
+        // Récupérer le commentaire à partir du service
+        Comment commentToUpdate = commentDAO.getCommentById(commentId);
+
+        // Mettre à jour le contenu du commentaire
+        commentToUpdate.setContenu(newContent);
+
+        // Enregistrer les modifications dans la base de données
+        commentService.saveComment(commentToUpdate);
+
+        // Rediriger vers la page de détails du livre ou une autre page appropriée
+        return new ModelAndView("redirect:/livres/" + commentToUpdate.getLivre().getLivre_id());
+    }
+    
+    @PostMapping("/livres/comments/{commentId}/signaler")
+    public ModelAndView signalerCommentaire(@PathVariable Long commentId) {
+        Comment commentToSignal = commentDAO.getCommentById(commentId);
+
+        if (commentToSignal != null) {
+            // Mettez à jour les champs de signalement
+            commentToSignal.setEstSignale(true);
+            // Vous pouvez également ajouter une raison de signalement si nécessaire
+            commentToSignal.setRaisonSign("Contenu inapproprié");
+
+            // Enregistrez les modifications dans la base de données
+            commentService.saveComment(commentToSignal);
+        }
+
+        // Redirigez l'utilisateur vers la page de détails du commentaire
+        return new ModelAndView("redirect:/livres/"+ commentToSignal.getLivre().getLivre_id()); 
+    }
+    
+   
+    @GetMapping("/dashboard/commentaires-signales")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ModelAndView afficherCommentairesSignales(Model model) {
+        List<Comment> commentairesSignales = commentService.getCommentairesSignales();
+        model.addAttribute("commentairesSignales", commentairesSignales);
+        return new ModelAndView("/Comment/commentSignaler");
+    }
+
+    @PostMapping("/resetSignalement/{commentId}")
+    public ModelAndView resetSignalement(@PathVariable Long commentId) {
+        commentService.resetSignalement(commentId);
+        return new ModelAndView("redirect:/dashboard/commentaires-signales"); // Redirige vers la liste des commentaires signalés
+    }
+    
+    @DeleteMapping("/dashboard/commentaires-signales/{commentId}")
+    public ModelAndView deleteCommentsignale(@PathVariable Long commentId, Principal principal) {
+        // Retrieve authenticated user
+        String username = principal.getName();
+        User authenticatedUser = userService.getUserByUsername(username);
+        Comment commentToDelete = commentDAO.getCommentById(commentId);
+       
+        // Delete comment if it belongs to the authenticated user
+        commentService.deleteComment(commentId, authenticatedUser);
+        
+
+        return new ModelAndView("redirect:/dashboard/commentaires-signales"); 
     }
 }
 

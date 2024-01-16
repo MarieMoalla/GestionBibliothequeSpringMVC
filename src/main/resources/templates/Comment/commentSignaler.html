@@ -1,0 +1,48 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  layout:decorate="~{layouts/dashboard}">
+
+<head>
+
+<title>commentaires signalé</title>
+</head>
+
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+
+
+<div class="container-fluid" id="body-container-fluid">
+				<div class="container">
+					<!---- for body container ---->
+					<div class="row">
+						<div class="col-lg-12">
+						<div class="card" style="width:100%">
+						<div  class="card-body" >
+
+<h3>Commentaires Signalés</h3>
+    <div class="card"  th:each="comment : ${commentairesSignales}">
+  <div class="card-header">
+    <span th:text="${comment.adherent.username}" style="font-weight: bold; color: blue;font-size:20px"></span>
+  </div>
+  <div class="card-body">
+    <blockquote class="blockquote mb-0">
+     <p th:text="${comment.contenu}"></p>
+     <form th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:action="@{'/dashboard/commentaires-signales/' + ${comment.comment_id}}" method="post">
+ 				
+ 				<input type="hidden" name="_method" value="DELETE"/>
+                <button  class="btn btn-danger btn-sm"  type="submit">Delete Comment</button>
+          </form>
+          <form th:action="@{'/resetSignalement/' + ${comment.comment_id}}" method="post">
+    <button class="btn btn-success btn-sm"  type="submit">Réinitialiser le signalement</button>
+</form>
+     </div>
+     </div>
+	</div>
+	 </div>
+     </div>
+	</div>
+	 </div>
+     </div>
+	</div>
+	</div>
+	</body>
+	</html>

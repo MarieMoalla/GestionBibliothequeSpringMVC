@@ -60,6 +60,7 @@ public class EmpruntController {
 	{
 		//update amende if exist
 		Page<Emprunt> empruntPage = empruntService.getEmpruntsWithStatusPageable(PageRequest.of(page,5),keyword);
+		
 		empruntService.updateAmendes(empruntPage.getContent());
         model.addAttribute("emprunts", empruntPage);
         model.addAttribute("currentPage", page);
