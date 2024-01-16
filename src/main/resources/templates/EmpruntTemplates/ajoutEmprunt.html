@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/dashboard}">
+
+<head>
+    <title>Formulaire d'ajout d'emprunts</title>
+</head>
+
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+    <h1 class="text-danger">Ajout Emprunt pour livre <span th:text="${livre.titre}"></span> </h1>
+    <br>
+    <form th:action="@{'/emprunts/createEmprunt/' + ${livre.livre_id}}" th:object="${nouvelEmp}" method="POST">
+        <div class="form-group">
+			<div class="row">
+				<div class="col">
+					<label for="nbcopie">Utilisateur: </label>
+     				<input type="text" value="form-control" th:field="${user.username}"  disabled required>  
+				</div>
+				<div class="col">
+					<label for="nbcopie">ISBN Livre emprunté: </label>
+     				<input type="text" class="form-control"   th:field="${livre.ISBN}"   disabled required> 
+				</div>
+				<label for="nbcopie">Nombre des copies (Min: 1 - Max:  <span th:text="${livre.quantite}"></span> ):</label>
+     		<input type="number" class="form-control" id="nbcopie"  th:field="*{nbCopies}" required>          
+			</div>
+			
+     		
+           
+        </div>
+        
+            <button type="submit" class="btn btn-primary">Submit</button>
+       
+    </form>
+</div>
+
+<!-- Include Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

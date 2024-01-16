@@ -1,0 +1,101 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  layout:decorate="~{layouts/dashboard}">
+
+<head>
+
+<title>Listes de mes Emprunts</title>
+</head>
+
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+
+<div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="page-title">
+					    <h3>List Emprunts</h3>
+					</div>
+					
+                    <div class="d-flex " th:if="${#authorization.expression('hasRole(''USER'')')}">
+                        <a class="btn btn-success btn-sm" th:href="@{/livres}">Emprunter un Livre</a>
+                        <a class="btn btn-warning btn-sm" th:href="@{'/emprunts/mesEmprunt/historique/'+${username}}">Historique Empruntes</a>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-0">
+                    <div class="table-responsive">
+                        <table class='table mb-0' id="table1">
+                            <thead>
+                            <tr>
+								<th scope="col">Livre</th>
+					            
+					            <th scope="col">Date Début</th>
+					           	<th scope="col">Date Retour</th>
+					           	<th scope="col">Nombre Copies </th>
+					           	<th scope="col">Amends</th>
+					           	<th scope="col">Status</th>
+					        </tr>
+                            </thead>
+                            <tbody>
+                            <tr scope="row" th:each="emp : ${emprunts.content}" >
+					            <td >
+									<a th:href="@{'/livres/' + ${emp.livre.livre_id}}" >
+					        			<span th:text="${emp.livre.titre}"></span>
+					    			</a>
+								</td>
+					            <td th:text="${emp.dateDebut}"></td>
+					            <td th:text="${emp.dateRetour}"></td>
+					            <td th:text="${emp.nbCopies}"></td>
+					            <td th:text="${emp.amendes}"></td>
+								<td>
+									<span th:if="${emp.status.name() == 'EN_ATTENTE'}" th:style="${emp.status.name() == 'EN_ATTENTE'} ? 'background-color: yellow;' : 'background-color: white; color: black;'" th:text="${emp.status}"></span>
+								 	<span th:if="${emp.status.name() == 'RETOURNE'}" th:style="${emp.status.name() == 'RETOURNE'} ? 'background-color: green;' : 'background-color: white; color: black;'" th:text="${emp.status}"></span>
+									<span th:if="${emp.status.name() == 'EMPRUNTE'}" th:style="${emp.status.name() == 'EMPRUNTE'} ? 'background-color: orange;' : 'background-color: white; color: black;'" th:text="${emp.status}"></span>
+									<span th:if="${emp.status.name() == 'REFUSE'}" th:style="${emp.status.name() == 'REFUSE'} ? 'background-color: black;' : 'background-color: white; color: white;'" th:text="${emp.status}"></span>
+								 </td>
+
+					            
+					        </tr>
+                            </tbody>
+                        </table>
+						<nav aria-label="Page navigation" class="d-flex justify-right mt-3">
+						    <ul class="pagination">
+						        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+						            <a class="page-link" th:href="@{'/emprunts/mesEmprunt/' + ${username}(page=0)}">First</a>
+						        </li>
+						        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+						            <a class="page-link" th:href="@{'/emprunts/mesEmprunt/' + ${username}(page=${currentPage - 1})}">Previous</a>
+						        </li>
+						        <li class="page-item" th:each="i : ${#numbers.sequence(0, emprunts.totalPages - 1)}"
+						            th:classappend="${currentPage == i ? 'active' : ''}">
+						            <a class="page-link" th:href="@{'/emprunts/mesEmprunt/' + ${username}(page=${i})}" th:text="${i + 1}"></a>
+						        </li>
+						        <li class="page-item" th:classappend="${currentPage == emprunts.totalPages - 1 ? 'disabled' : ''}">
+						            <a class="page-link" th:href="@{'/emprunts/mesEmprunt/' + ${username}(page=${currentPage + 1})}">Next</a>
+						        </li>
+						        <li class="page-item" th:classappend="${currentPage == emprunts.totalPages - 1 ? 'disabled' : ''}">
+						            <a class="page-link" th:href="@{'/emprunts/mesEmprunt/' + ${username}(page=${emprunts.totalPages - 1})}">Last</a>
+						        </li>
+						    </ul>
+						</nav>
+
+                        <!-->
+                        <div th:if="${livres.totalPages > 0}" class="pagination"
+						    th:each="pageNumber : ${pageNumbers}">
+						    <a th:href="@{/livres(size=${livres.size}, page=${pageNumber})}"
+						        th:text=${pageNumber}
+						        th:class="${pageNumber==livres.number + 1} ? active"></a>
+						</div>
+						<!-->
+                    </div>
+                </div>
+            </div>
+
+
+</div>
+</body>
+<script type="text/javascript">
+    function clearSearch() {
+        window.location = "[[@{/livres}]]";
+    }
+</script>
+</html>

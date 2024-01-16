@@ -1,0 +1,41 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/dashboard}">
+
+<head>
+<title>Mettre à jour emprunt</title>
+</head>
+
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+<div class="container-sm">
+<div class="page-title">
+					    <h3>Mettre à jour emprunt</h3>
+					</div>
+
+<form   th:action="@{/emprunts/updateEmprunt/{id}(id=${emp.emprunt_id})}" method="post">
+	<input type="hidden" name="_method" value="PUT" />
+    <div class="form-group">
+        <label for="nom">Date Début Emprunt</label>
+        <input type="date" class="form-control" id="datedebut" th:field="*{emp.dateDebut}" >
+    </div>
+    <div class="form-group">
+        <label for="nom">Date Retour Livre(s)</label>
+        <input type="date" class="form-control" id="dateretour" th:field="*{emp.dateRetour}" >
+    </div>
+    <div class="form-group">
+        <label for="nom">Status Empunt</label>
+        <select class=" form-control border-primary" name="keyword" id="keyword"  th:field="*{emp.status}"  >
+					        <option th:value="${emp.status}" th:text="${emp.status}" ></option>
+					        <option value="EN_ATTENTE">EN_ATTENTE</option>
+					        <option value="RETOURNE">RETOURNE</option>
+					        <option value="EMPRUNTE">EMPRUNTE</option>
+					        <option value="REFUSE">REFUSE</option>
+					    </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Update Livre</button>
+</form>
+</div>
+	</div>
+</body>
+</html>

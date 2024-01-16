@@ -1,0 +1,131 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/dashboard}">
+
+<head>
+
+<title>Livre Details</title>
+</head>
+
+<body>
+<div class="container-sm" layout:fragment="content">
+<div class="card-header d-flex justify-content-between align-items-center">
+		<div class="page-title">
+			<h3>Details Livre</h3>
+		</div>
+		<div class="d-flex ">
+                 <a class="btn btn-success btn-sm" th:href="@{/livres}">List livres</a>
+
+                 <a  th:if="${#authorization.expression('hasRole(''ADMIN'')')}" class="btn btn-primary btn-sm" th:href="@{'/updateLivreForm/' + ${livre.livre_id}}" >Modifier Livre</a>
+                 <a  th:if="${#authorization.expression('hasRole(''USER'')') and livre.quantite > 0}" class="btn btn-primary btn-sm" th:href="@{'/emprunts/createEmpruntForm/' + ${livre.livre_id}}" >Emprunter</a>
+
+        </div>
+        
+	</div>
+<form th:object="${livre}" method="post">
+    <div class="form-row row">
+        <div class="form-group col-md-6">
+            <label for="nom">ISBN:</label>
+            <input type="text" class="form-control" id="ISBN" th:field="*{ISBN}" disabled>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="prenom">Titre:</label>
+            <input type="text" class="form-control" id="titre" th:field="*{titre}" disabled>
+        </div>
+    </div>
+    
+    <div class="form-row row">
+        <div class="form-group col-md-6">
+            <label for="dateNaissance">Année de publication:</label>
+            <input type="number" class="form-control" id="anneePublication" th:field="*{anneePublication}" disabled>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="prenom">Auteur:</label>
+            <input type="text" class="form-control" id="description" th:fiels="*{auteur.nom}" disabled>
+        </div>
+    </div>
+
+    <div class="form-row row">
+        <div class="form-group col-md-6">
+            <label for="status">Langue:</label>
+            <input type="text" th:field="*{langue}" id="langue" class="form-control" disabled>
+        </div>
+        
+        <div class="form-group col-md-6">
+            <label for="status">Genre:</label>
+            <input type="text" id="genre" th:field="*{genre}" class="form-control" disabled>
+        </div>
+    </div>
+
+    <div class="form-row row">
+        <div class="form-group col-md-6">
+            <label for="nationalite">Quantité:</label>
+            <input th:style="${livre.quantite > 0} ? 'background-color: green;' : 'background-color: red;color:white;'" type="text" class="form-control" id="nationalite" th:field="*{quantite}" disabled>
+        </div>
+                <div class="form-group col-md-6">
+            <label for="nationalite">Amendre Par Jour:</label>
+            <input  type="text" class="form-control" id="amendeParJour" th:field="*{amendeParJour}" disabled>
+        </div>
+    </div>
+        <div class="form-group">
+            <label for="prenom">Description:</label>
+            <input type="text" class="form-control" id="description" th:field="*{description}" disabled>
+        </div>
+ 
+</form>
+<div class="container-md">
+			
+		
+			
+					
+			<div class="container-fluid" id="body-container-fluid">
+				<div class="container">
+					<!---- for body container ---->
+					<div class="row">
+						<div class="col-lg-12">
+						<div class="card" style="width:100%">
+						<div  class="card-body" >
+<h3>Comments</h3>
+    <div class="card"  th:each="comment : ${comments}">
+  <div class="card-header">
+    <span th:text="${comment.adherent.username}" style="font-weight: bold; color: blue;font-size:20px"></span>
+  </div>
+  <div class="card-body">
+    <blockquote class="blockquote mb-0">
+     <p th:text="${comment.contenu}"></p>
+       <form th:if="${comment.adherent.username eq principal.name or #authorization.expression('hasRole(''ADMIN'')')}" th:action="@{'/livres/comments/' + ${comment.comment_id}}" method="post">
+ 				
+ 				<input type="hidden" name="_method" value="DELETE"/>
+                <button  class="btn btn-danger btn-sm"  type="submit">Delete Comment</button>
+                
+            </form>
+    </blockquote>
+  </div>
+</div>
+    
+    
+ <form th:action="@{'/livres/' + ${livre.livre_id} + '/addComment'}" method="post" th:if="${#authorization.expression('hasRole(''USER'')')}">
+       <div class="d-flex justify-content-between">
+        <input class="form-control" type="text" id="commentContent" name="commentContent" required/>
+
+        <button class="btn btn-success btn-sm" type="submit">Add Comment</button>
+        </div>
+    </form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

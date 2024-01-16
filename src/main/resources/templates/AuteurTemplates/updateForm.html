@@ -1,0 +1,49 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/dashboard}">
+
+<head>
+<title>Listes des auteurs</title>
+</head>
+
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+<div class="container-sm">
+<div class="page-title">
+					    <h3>Mettre à jour Auteur</h3>
+					</div>
+<form th:action="@{'/auteurs/update/' + ${existingAuteur.auteur_id}}" method="post">
+<input type="hidden" name="_method" value="PUT" />
+    <!-- Include form fields for updating Auteur properties -->
+    <div class="form-group">
+        <label for="nom">Nom:</label>
+        <input type="text" class="form-control" id="nom" th:field="*{existingAuteur.nom}">
+        
+    </div>
+     <div class="form-group">
+        <label for="prenom">Prenom:</label>
+        <input type="text" class="form-control" id="prenom" th:field="*{existingAuteur.prenom}">
+    </div>
+    <div class="form-group">
+        <label for="dateNaissance">Date de naissance:</label>
+        <input type="text" class="form-control" id="dateNaissance" th:field="*{existingAuteur.dateNaissance}">
+    </div>
+   <div class="form-group">
+        <label for="status">Status:</label>
+        <select th:field="*{existingAuteur.status}" class="form-control">
+		  <option value="VIVANT">VIVANT</option>
+		  <option value="DECEDE">DECEDE</option>
+		</select>
+    </div>
+    <div class="form-group">
+        <label for="nationalite">Nationalite:</label>
+        <input type="text" class="form-control" id="nationalite" th:field="*{existingAuteur.nationalite}">
+    </div>
+   
+
+    <button type="submit" class="btn btn-primary">Update Auteur</button>
+</form>
+</div>
+	</div>
+</body>
+</html>

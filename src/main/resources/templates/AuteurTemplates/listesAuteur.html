@@ -1,0 +1,84 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/dashboard}">
+	
+<head>
+	<title>Listes des auteurs</title>
+</head>
+
+<body>
+<div class="main-content container-fluid" layout:fragment="content">
+<div class="container-sm">
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="page-title">
+					    <h3>List Auteurs</h3>
+					</div>
+                    <div class="d-flex " th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                        <a class="btn btn-success btn-sm" th:href="@{/auteurs/createAuteurForm}">Ajouter Auteur</a>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-0">
+                    <div class="table-responsive">
+                        <table class='table mb-0' id="table1">
+                            <thead>
+                            <tr>
+					            <th scope="col">Nom</th>
+					            <th scope="col">Prénom</th>
+					           	<th scope="col">Date de naissance </th>
+					           	<th scope="col">Status </th>
+					           	<th scope="col">Nationnalité </th>
+					           	<th scope="col" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Actions</th>
+					        </tr>
+                            </thead>
+                            <tbody>
+                            <tr scope="row" th:each="auteur : ${auteurs.content}">
+					            <td>
+									<a th:href="@{'/auteurs/'+ ${auteur.auteur_id}}">
+					        			<span th:text="${auteur.nom}"></span>
+					    			</a>
+								</td>
+					            <td th:text="${auteur.prenom}"></td>
+					            <td th:text="${auteur.dateNaissance}"></td>
+					            <td th:text="${auteur.status}"></td>
+					            <td th:text="${auteur.nationalite}"></td>
+					            <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+					                <!-- Add buttons for delete and update -->
+					                 <form th:action="@{'/auteurs/delete/' + ${auteur.auteur_id}}" method="post">
+					                <input type="hidden" name="_method" value="delete" />
+					                <button type="submit" onClick="return confirm('sure?')" class="btn btn-danger btn-sm">Supprimer</button>
+					            
+					                <a th:href="@{'/auteurs/updateAuteurForm/' + ${auteur.auteur_id}}" class="btn btn-primary btn-sm">Mettre à Jour</a>
+					            </form></td>
+					        </tr>
+                            </tbody>
+                        </table>
+                        <nav aria-label="Page navigation" class="d-flex justify-right mt-3">
+					        <ul class="pagination">
+					            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+					                <a class="page-link" th:href="@{/auteurs(page=0)}">First</a>
+					            </li>
+					            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+					                <a class="page-link" th:href="@{/auteurs(page=${currentPage - 1})}">Previous</a>
+					            </li>
+					            <li class="page-item" th:each="i : ${#numbers.sequence(0, auteurs.totalPages - 1)}"
+					                th:classappend="${currentPage == i ? 'active' : ''}">
+					                <a class="page-link" th:href="@{/auteurs(page=${i})}" th:text="${i + 1}"></a>
+					            </li>
+					            <li class="page-item" th:classappend="${currentPage == auteurs.totalPages - 1 ? 'disabled' : ''}">
+					                <a class="page-link" th:href="@{/auteurs(page=${currentPage + 1})}">Next</a>
+					            </li>
+					            <li class="page-item" th:classappend="${currentPage == auteurs.totalPages - 1 ? 'disabled' : ''}">
+					                <a class="page-link" th:href="@{/auteurs(page=${auteurs.totalPages - 1})}">Last</a>
+					            </li>
+					        </ul>
+					    </nav>
+                    </div>
+                </div>
+            </div>
+
+
+</div>
+</div>
+</body>
+</html>

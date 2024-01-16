@@ -1,0 +1,54 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/dashboard}">
+
+<head>
+<title>Listes des livres</title>
+</head>
+
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+<div class="container-sm">
+<div class="page-title">
+					    <h3>Mettre à jour livre</h3>
+					</div>
+
+<form   th:action="@{'/updateLivre/' + ${livre.livre_id}}"  method="post">
+	<input type="hidden" name="_method" value="PUT" />
+    <div class="form-group">
+        <label for="nom">ISBN:</label>
+        <input type="text" class="form-control" id="ISBN" th:field="*{livre.ISBN}" >
+    </div>
+    <div class="form-group">
+        <label for="prenom">Titre:</label>
+        <input type="text" class="form-control" id="titre" th:field="*{livre.titre}" >
+    </div>
+     <div class="form-group">
+        <label for="dateNaissance">Date de publication:</label>
+        <input type="number" class="form-control" id="anneePublication" th:field="*{livre.anneePublication}" >
+    </div>
+        <div class="form-group">
+        <label for="prenom">Description:</label>
+        <input type="text" class="form-control" id="description" th:field="*{livre.description}" >
+    </div>
+   <div class="form-group">
+        <label for="status">Langue:</label>
+       <input  type ="text" th:field="*{livre.langue}" id="langue" class="form-control" >  
+     </div>
+     
+     <div class="form-group">
+        <label for="status">Genre:</label>
+       <input type="text" id="genre" th:field="*{livre.genre}" class="form-control" >
+     </div>
+     
+    <div class="form-group">
+		
+        <label for="nationalite">Quantité:</label>
+        <input th:style="${livre.quantite > 0} ? 'background-color: green;' : 'background-color: red;color:white;'" type="text" class="form-control" id="nationalite" th:field="*{livre.quantite}" >
+    </div>
+    <button type="submit" class="btn btn-primary">Update Livre</button>
+</form>
+</div>
+	</div>
+</body>
+</html>
