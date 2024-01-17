@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.entity.Auteur;
 import com.example.entity.Livre;
 import com.example.service.AuteurService;
+import com.example.service.LivreService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,8 @@ public class AuteurController {
     @Autowired
     private AuteurService auteurService;
 
+    @Autowired
+    private LivreService livreService;
     
     
     // Get All Auteurs
@@ -99,10 +102,19 @@ public class AuteurController {
     @DeleteMapping("delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Cette opération nous permet de supprimer un auteur précis")
-    public ModelAndView deleteAuteur(@PathVariable Long id) 
+    public ModelAndView deleteAuteur(@PathVariable Long id, Model model) 
     {
-        auteurService.deleteAuteur(id);
-        return new ModelAndView("redirect:/auteurs");
+    	if(auteurService.getLivresByAuteur(id) != null)
+    	{
+    		auteurService.deleteAuteur(id);
+        	return new ModelAndView("redirect:/auteurs");
+    	}
+    	else 
+    	{
+    		String message = "Auteur à des livres existants!";
+    		model.addAttribute("message", message);
+    		return new ModelAndView("error", model.asMap());
+    	}
     }
     
     

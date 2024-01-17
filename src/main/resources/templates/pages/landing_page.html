@@ -17,9 +17,9 @@
                 <div class="card-body p-0">
                     <div class="d-flex flex-column">
                         <div class='px-3 py-3 d-flex justify-content-between'>
-                            <h3 class='card-title'>Totale Livres</h3>
+                            <h3 class='card-title'>List Auteur</h3>
                             <div class="card-right d-flex align-items-center">
-                                <p>$50 </p>
+                                <a th:href="@{/livres}">Access</a>
                             </div>
                         </div>
                         <div class="chart-wrapper">
@@ -34,9 +34,12 @@
                 <div class="card-body p-0">
                     <div class="d-flex flex-column">
                         <div class='px-3 py-3 d-flex justify-content-between'>
-                            <h3 class='card-title'>Emprunt En Attente</h3>
-                            <div class="card-right d-flex align-items-center">
-                                <p>$532,2 </p>
+                            <h3 class='card-title'>Emprunts</h3>
+                            <div class="card-right d-flex align-items-center" th:if="${#authorization.expression('hasRole(''USER'')')}">
+                                <a th:href="@{/emprunts/mesEmprunt/__${#authentication.name}__}">Access</a>
+                            </div>
+                            <div class="card-right d-flex align-items-center" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                                <a th:href="@{/emprunts/all}">Access</a>
                             </div>
                         </div>
                         <div class="chart-wrapper">
@@ -51,9 +54,9 @@
                 <div class="card-body p-0">
                     <div class="d-flex flex-column">
                         <div class='px-3 py-3 d-flex justify-content-between'>
-                            <h3 class='card-title'>livres Empruntés </h3>
+                            <h3 class='card-title'>List Livres  </h3>
                             <div class="card-right d-flex align-items-center">
-                                <p>1,544 </p>
+                                <a th:href="@{/livres}">Access</a>
                             </div>
                         </div>
                         <div class="chart-wrapper">
@@ -66,11 +69,22 @@
         <div class="col-12 col-md-3">
             <div class="card card-statistic">
                 <div class="card-body p-0">
-                    <div class="d-flex flex-column">
+                    <div class="d-flex flex-column" th:if="${#authorization.expression('hasRole(''USER'')')}">
                         <div class='px-3 py-3 d-flex justify-content-between'>
-                            <h3 class='card-title'>Totale Emprunt </h3>
+                            <h3 class='card-title'>Historiques </h3>
                             <div class="card-right d-flex align-items-center">
-                                <p>423 </p>
+                                <a th:href="@{/emprunts/mesEmprunt/historique/__${#authentication.name}__}">Access</a>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="canvas4" style="height:100px !important"></canvas>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                        <div class='px-3 py-3 d-flex justify-content-between'>
+                            <h3 class='card-title'>Commentaire Signalés </h3>
+                            <div class="card-right d-flex align-items-center">
+                                <a th:href="@{/dashboard/commentaires-signales}">Access</a>
                             </div>
                         </div>
                         <div class="chart-wrapper">
@@ -125,16 +139,47 @@
                                 <th>Nom</th>
                                 <th>Prenom</th>
                                 <th>Email</th>
+                                <th th:if="${#authorization.expression('hasRole(''ADMIN'')')}">Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr scope="row" th:each="user : ${users}">
+                            <tr scope="row" th:each="user : ${userPage.getContent()}">
 					            <td th:text="${user.nom}"></td>
 					            <td th:text="${user.prenom}"></td>
 					            <td th:text="${user.email}"></td>
+					            <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+					            <!-- Add buttons for delete and update -->
+					            <form th:action="@{'/user/delete/' + ${user.username}}" method="post">
+					                <input type="hidden" name="_method" value="delete" />
+					                <button type="submit" onClick="return confirm('sure?')" class="btn btn-danger btn-sm">Delete</button>
+					            
+					                <a th:href="@{'/user/'+ ${user.username}}" class="btn btn-primary btn-sm">Update</a>
+					            </form>
+					            
+					            </td>
                             </tr>
                             </tbody>
                         </table>
+                        <nav aria-label="Page navigation" class="d-flex justify-right mt-3">
+					        <ul class="pagination">
+					            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+					                <a class="page-link" th:href="@{/(page=0)}">First</a>
+					            </li>
+					            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+					                <a class="page-link" th:href="@{/(page=${currentPage - 1})}">Previous</a>
+					            </li>
+					            <li class="page-item" th:each="i : ${#numbers.sequence(0, userPage.totalPages - 1)}"
+					                th:classappend="${currentPage == i ? 'active' : ''}">
+					                <a class="page-link" th:href="@{/(page=${i})}" th:text="${i + 1}"></a>
+					            </li>
+					            <li class="page-item" th:classappend="${currentPage == userPage.totalPages - 1 ? 'disabled' : ''}">
+					                <a class="page-link" th:href="@{/(page=${currentPage + 1})}">Next</a>
+					            </li>
+					            <li class="page-item" th:classappend="${currentPage == userPage.totalPages - 1 ? 'disabled' : ''}">
+					                <a class="page-link" th:href="@{/(page=${userPage.totalPages - 1})}">Last</a>
+					            </li>
+					        </ul>
+					    </nav>
                     </div>
                 </div>
             </div>
@@ -153,67 +198,51 @@
                     </div>
                 </div>
             </div> -->
-            <div class="card widget-todo">
+            <div class="card widget-todo" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
                 <div
                         class="card-header border-bottom d-flex justify-content-between align-items-center">
-                    <h4 class="card-title d-flex">
-                        <i class='bx bx-check font-medium-5 pl-25 pr-75'></i>Progress
+                    <h4 class=" px-3 py-3 card-title d-flex">
+                        <i class='bx bx-check font-medium-5 pl-25 pr-75'></i>Ajouter Utilisateur
                     </h4>
 
                 </div>
-                <div class="card-body px-0 py-1">
-                    <table class='table table-borderless'>
-                        <tr>
-                            <td class='col-3'>UI Design</td>
-                            <td class='col-6'>
-                                <div class="progress progress-info">
-                                    <div class="progress-bar" role="progressbar" style="width: 60%"
-                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
-                            <td class='col-3 text-center'>60%</td>
-                        </tr>
-                        <tr>
-                            <td class='col-3'>VueJS</td>
-                            <td class='col-6'>
-                                <div class="progress progress-success">
-                                    <div class="progress-bar" role="progressbar" style="width: 35%"
-                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
-                            <td class='col-3 text-center'>30%</td>
-                        </tr>
-                        <tr>
-                            <td class='col-3'>Laravel</td>
-                            <td class='col-6'>
-                                <div class="progress progress-danger">
-                                    <div class="progress-bar" role="progressbar" style="width: 50%"
-                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
-                            <td class='col-3 text-center'>50%</td>
-                        </tr>
-                        <tr>
-                            <td class='col-3'>ReactJS</td>
-                            <td class='col-6'>
-                                <div class="progress progress-primary">
-                                    <div class="progress-bar" role="progressbar" style="width: 80%"
-                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
-                            <td class='col-3 text-center'>80%</td>
-                        </tr>
-                        <tr>
-                            <td class='col-3'>Go</td>
-                            <td class='col-6'>
-                                <div class="progress progress-secondary">
-                                    <div class="progress-bar" role="progressbar" style="width: 65%"
-                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </td>
-                            <td class='col-3 text-center'>65%</td>
-                        </tr>
-                    </table>
+                <div class="card-body px-3 py-3">
+                    <form th:action="@{/user/createuser}" method="post">
+                <input type="hidden" name="_method" value="POST" />
+                <div class="form-group">
+                    <label for="nom">Username:</label>
+                    <input type="text" class="form-control" id="nom" th:field="*{u.username}" />
+                </div>
+                <div class="form-group">
+                    <label for="nom">Mode de Passe:</label>
+                    <input type="password" class="form-control" id="p" th:field="*{u.password}" />
+                </div>
+                <div class="form-group">
+                    <label for="nom">Nom:</label>
+                    <input type="text" class="form-control" id="i" th:field="*{u.nom}" />
+                </div>
+                <div class="form-group">
+                    <label for="prenom">Prènom:</label>
+                    <input type="text" class="form-control" id="y" th:field="*{u.prenom}" />
+                </div>
+                <div class="form-group">
+                    <label for="prenom">Email:</label>
+                    <input type="text" class="form-control" id="o" th:field="*{u.email}" />
+                </div>
+                <label for="role">User Role</label>
+             
+                <br><br>
+                <div class="form-group" >
+                    <label for="role">User Role</label>
+                    <select class="form-control" id="role" th:field="*{auth.authority}">
+                        <option value="ROLE_USER" th:selected="${auth.authority == 'ROLE_USER'}">User</option>
+                        <option value="ROLE_ADMIN" th:selected="${auth.authority == 'ROLE_ADMIN'}">Admin</option>
+                    </select>
+                    <br><br>
+                    <button type="submit" class="btn btn-primary">Ajout User</button>
+                </div>
+                
+            </form>
                 </div>
             </div>
         </div>

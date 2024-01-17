@@ -10,6 +10,7 @@ import com.example.entity.Livre;
 import com.example.entity.User;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 @Service
 public class AuthorityService implements IAuthorityService {
 
@@ -36,6 +37,18 @@ public class AuthorityService implements IAuthorityService {
 		{
 			Session currentSession = entityManager.unwrap(Session.class);
 			currentSession.merge(auth);
+		}
+		catch(Exception ex) {System.out.println(ex.getMessage());}
+	}
+	@Transactional
+	public void deleteAuthorityByUsername(String username) {
+		try
+		{
+			Session currentSession = entityManager.unwrap(Session.class);			
+			Query<Authority> query = currentSession.createQuery("FROM Authority WHERE user.username = :username", Authority.class);
+			query.setParameter("username", username);
+			Authority auth = query.uniqueResult();
+			currentSession.remove(auth);
 		}
 		catch(Exception ex) {System.out.println(ex.getMessage());}
 	}

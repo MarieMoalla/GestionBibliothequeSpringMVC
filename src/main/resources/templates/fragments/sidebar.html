@@ -50,9 +50,16 @@
 						    <a th:href="@{/emprunts/all}">Emprutes</a>
 						</li>
 
+						<li th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+						   <a th:href="@{/dashboard/commentaires-signales}">Commentaires Signalés</a>
+						</li>
 						
                         <li th:if="${#authorization.expression('hasRole(''USER'')')}">
                             <a th:href="@{/emprunts/mesEmprunt/__${#authentication.name}__}">Mes Empruntes</a>
+                        </li>
+                        
+                        <li th:if="${#authorization.expression('hasRole(''USER'')')}">
+                            <a th:href="@{/emprunts/mesEmprunt/historique/__${#authentication.name}__}">Mes Historiques</a>
                         </li>
 						<!--
 

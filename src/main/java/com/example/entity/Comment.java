@@ -24,7 +24,7 @@ public class Comment {
     private Long comment_id;
     private String objet;
     private String contenu;
-    private Boolean estSignale;
+    private Boolean estSignale = false;
     private String raisonSign;
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -2,12 +2,16 @@ package com.example.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.example.entity.Livre;
 import com.example.entity.User;
 
 public interface IUserService {
 
-	/*List<User> getUsers(String role);
-	User getUser(int id);
+	Page<User> getUsers(Pageable pageable);
+	/*User getUser(int id);
 	void saveUser(User user);
 	void deleteUser(int id);*/
 	User getUserByUsername(String username);
