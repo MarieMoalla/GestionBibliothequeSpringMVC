@@ -104,17 +104,16 @@ public class AuteurController {
     @ApiOperation(value = "Cette opération nous permet de supprimer un auteur précis")
     public ModelAndView deleteAuteur(@PathVariable Long id, Model model) 
     {
-    	if(auteurService.getLivresByAuteur(id) != null)
-    	{
-    		auteurService.deleteAuteur(id);
-        	return new ModelAndView("redirect:/auteurs");
-    	}
-    	else 
-    	{
-    		String message = "Auteur à des livres existants!";
-    		model.addAttribute("message", message);
-    		return new ModelAndView("error", model.asMap());
-    	}
+    	List<Livre> livresByAuteur = auteurService.getLivresByAuteur(id);
+
+        if (livresByAuteur != null && !livresByAuteur.isEmpty()) {
+            String message = "Auteur a des livres existants!";
+            model.addAttribute("message", message);
+            return new ModelAndView("error", model.asMap());
+        } else {
+            auteurService.deleteAuteur(id);
+            return new ModelAndView("redirect:/auteurs");
+        }
     }
     
     
