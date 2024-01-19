@@ -248,6 +248,8 @@ public class EmpruntService implements IEmpuntService {
 		public void updateAmendes(List<Emprunt> emps) {
 			for(int i = 0; i< emps.size();i++)
 			{
+				if(emps.get(i).getDateRetour() != null)
+				{
 				Date currentDate = new Date();
 				if (emps.get(i).getDateRetour().compareTo(currentDate) >0 && Emprunt.Status.EMPRUNTE.toString().equals(emps.get(i).getStatus().name().toUpperCase()))
 				{
@@ -261,6 +263,7 @@ public class EmpruntService implements IEmpuntService {
 		            Session currentSession = entityManger.unwrap(Session.class);
 		            currentSession.merge(emps.get(i));
 		        } catch (Exception ex) {System.out.println(ex.getMessage());}
+				}
 				}
 			}		
 		}
