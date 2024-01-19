@@ -96,12 +96,13 @@
      <p th:text="${comment.contenu}"></p>
     <form th:if="${not comment.estSignale}" th:action="@{'/livres/comments/' + ${comment.comment_id}+'/signaler'}" method="post">
     <button class="btn btn-warning btn-sm" type="submit">Signaler le commentaire</button>
-    <p th:if="${comment.estSignale}" style="color: red;">Ce commentaire a été signalé.</p>
-	</form>
+   
+	</form> 
+	<p th:if="${comment.estSignale}" style="color: red;">Ce commentaire a été signalé.</p>
        <form th:if="${comment.adherent.username eq principal.name or #authorization.expression('hasRole(''ADMIN'')')}" th:action="@{'/livres/comments/' + ${comment.comment_id}}" method="post">
  				<input type="hidden" name="_method" value="DELETE"/>
                 <button  class="btn btn-danger btn-sm"  type="submit">Delete Comment</button>
-                        <a class="btn btn-primary btn-sm" th:href="@{'/livres/comments/'+${comment.comment_id}+'/edit'}">Modifier</a>
+                        <a th:if="${comment.adherent.username eq principal.name}" class="btn btn-primary btn-sm" th:href="@{'/livres/comments/'+${comment.comment_id}+'/edit'}">Modifier</a>
        </form>
     </blockquote>
   </div>
