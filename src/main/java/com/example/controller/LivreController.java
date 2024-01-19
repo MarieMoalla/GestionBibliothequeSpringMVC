@@ -134,7 +134,7 @@ public class LivreController {
     	 List<Comment> comments = commentService.getCommentsByLivre(id);
     	model.addAttribute("comments", comments);
     	model.addAttribute("livre", livreService.getLivre(id));
-    	 model.addAttribute("principal", principal);
+    	model.addAttribute("principal", principal);
 
     	model.addAttribute("auteur",auteurService.getAuteur(livreService.getLivre(id).getAuteur().getAuteur_id()));
         return new ModelAndView("LivreTemplates/livreDetails", model.asMap()); 

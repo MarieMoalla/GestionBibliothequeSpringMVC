@@ -95,7 +95,7 @@
     <blockquote class="blockquote mb-0">
      <p th:text="${comment.contenu}"></p>
     <form th:if="${not comment.estSignale}" th:action="@{'/livres/comments/' + ${comment.comment_id}+'/signaler'}" method="post">
-    <button class="btn btn-warning btn-sm" type="submit">Signaler le commentaire</button>
+    <button th:if="${comment.adherent.username ne principal.name}" class="btn btn-warning btn-sm" type="submit">Signaler le commentaire</button>
    
 	</form> 
 	<p th:if="${comment.estSignale}" style="color: red;">Ce commentaire a été signalé.</p>

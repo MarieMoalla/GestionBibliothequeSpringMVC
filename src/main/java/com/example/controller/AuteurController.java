@@ -37,7 +37,7 @@ public class AuteurController {
     @ApiOperation(value = "Cette opération nous permet de recevoir la liste des auteurs")
     public ModelAndView getAuteurs(Model model,@RequestParam(defaultValue = "0") int page) 
     {
-    	Page<Auteur> auteurs = auteurService.getPaginatedLivres(PageRequest.of(page,5));
+    	Page<Auteur> auteurs = auteurService.getPaginatedAuteurs(PageRequest.of(page,5));
         model.addAttribute("auteurs", auteurs);model.addAttribute("currentPage", page);
         return new ModelAndView("AuteurTemplates/listesAuteur", model.asMap());
     }
