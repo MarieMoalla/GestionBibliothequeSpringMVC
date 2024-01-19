@@ -67,7 +67,7 @@ public class AuteurService implements IAuteurService {
         {
 			Session currentSession = entityManager.unwrap(Session.class);
 
-	        Query<Livre> query = currentSession.createQuery("FROM Livre WHERE auteur.auteur_id = :id", Livre.class);
+	        Query<Livre> query = currentSession.createQuery("FROM Livre WHERE auteur.auteur_id = :auteur_id", Livre.class);
 	        query.setParameter("auteur_id", id);
 
 	        List<Livre> list = query.getResultList();
