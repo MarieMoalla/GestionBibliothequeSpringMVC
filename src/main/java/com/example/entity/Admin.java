@@ -20,6 +20,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "admin")
 @EqualsAndHashCode(callSuper = true)
 @Data
+
 @AllArgsConstructor
 @NoArgsConstructor
 @DiscriminatorValue("ADMIN")

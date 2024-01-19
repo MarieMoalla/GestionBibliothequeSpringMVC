@@ -33,18 +33,34 @@
     </div>
    <div class="form-group">
         <label for="status">Langue:</label>
-       <input  type ="text" th:field="*{livre.langue}" id="langue" class="form-control" >  
+       <select th:field="${livre.langue}" class="form-control" required>
+		  <option value="ARABE">ARABE</option>
+		  <option value="FRANCAIS">FRANCAIS</option>
+		  <option value="ANGLAIS">ANGLAIS</option>
+		</select>
      </div>
      
      <div class="form-group">
         <label for="status">Genre:</label>
-       <input type="text" id="genre" th:field="*{livre.genre}" class="form-control" >
-     </div>
+		<select th:field="${livre.genre}" class="form-control" required>
+		  <option value="Roman">Roman</option>
+            <option value="Science-fiction">Science-fiction</option>
+            <option value="Policier">Policier</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Drame">Drame</option>
+            <option value="Historique">Historique</option>
+            <option value="Biographie">Biographie</option>
+            <option value="Thriller">Thriller</option>
+		</select>     </div>
      
     <div class="form-group">
 		
         <label for="nationalite">Quantité:</label>
         <input th:style="${livre.quantite > 0} ? 'background-color: green;' : 'background-color: red;color:white;'" type="text" class="form-control" id="nationalite" th:field="*{livre.quantite}" >
+    </div>
+    <div class="form-group">
+        <label for="nationalite">Amande par jour:</label>
+        <input type="number" class="form-control" id="amendeParJour" th:field="*{livre.amendeParJour}" required>
     </div>
     <button type="submit" class="btn btn-primary">Update Livre</button>
 </form>

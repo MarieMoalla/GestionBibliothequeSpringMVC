@@ -16,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.dao.IEmprunteDAO;
-import com.example.dao.LiverDAO;
 import com.example.entity.Emprunt;
 import com.example.entity.Livre;
 import com.example.entity.User;

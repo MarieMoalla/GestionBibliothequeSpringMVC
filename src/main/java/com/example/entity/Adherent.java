@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -17,18 +18,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "adherent")
 @EqualsAndHashCode(callSuper = true)
-
 @Data
+@SuperBuilder 
 @AllArgsConstructor
 @NoArgsConstructor
 @DiscriminatorValue("USER")
 public class Adherent extends User {
+	
     @Temporal(TemporalType.DATE)
-    private Date abonnementDateExp;
+    private Date abonnementDateExp= java.sql.Date.valueOf(LocalDate.now().plusYears(1));
     
     @OneToMany(mappedBy = "adherent", cascade = CascadeType.ALL)
     private Set<Comment> comment;

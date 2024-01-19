@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.dao.CommentDAO;
+import com.example.dao.ILivreDAO;
 import com.example.entity.Auteur;
 import com.example.entity.Comment;
 import com.example.entity.Livre;
@@ -48,17 +49,18 @@ public class LivreController {
 
 	@Autowired
     private LivreService livreService;
-	
+	@Autowired
+	private ILivreDAO livre_repo;
 	@Autowired
     private UserService userService;
 	
 	@Autowired
     private AuteurService auteurService;	
 	
-	 @Autowired
-	    private CommentService commentService;
-	 @Autowired
-	    private CommentDAO commentDAO;
+	@Autowired
+	private CommentService commentService;
+	@Autowired
+	private CommentDAO commentDAO;
 	
 	@GetMapping(value = "livres")
     @ApiOperation(value = "Cette opération nous permet de recevoir la liste des livres")
@@ -94,7 +96,7 @@ public class LivreController {
     public ModelAndView createLivre(@ModelAttribute("nouvelLivre") Livre livre, @ModelAttribute("auteur") Auteur auteur ) {
         Auteur selectedAuteur = auteurService.getAuteur(auteur.getAuteur_id());
         livre.setAuteur(selectedAuteur);
-        livreService.saveLivre(livre);
+        livre_repo.save(livre);
         return new ModelAndView("redirect:/livres/" + livre.getLivre_id());
     }
 
@@ -123,7 +125,7 @@ public class LivreController {
         if (existingLivre != null) {
         	livre.setLivre_id(id);
         	livre.setAuteur(existingLivre.getAuteur());
-            livreService.saveLivre(livre);
+            livre_repo.save(livre);
         }
         return new ModelAndView("redirect:/livres/{id}");
     }

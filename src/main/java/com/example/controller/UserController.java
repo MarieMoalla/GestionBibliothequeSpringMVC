@@ -89,7 +89,12 @@ public class UserController {
     @ApiOperation(value = "Cette opération nous permet d'ajouter un utilisateur")
     public ModelAndView createUser(@ModelAttribute("u") User user, @ModelAttribute("auth") Authority auth ) {
         auth.setUser(user);
-        user_repo.save(user);
+        if (auth.getAuthority()== "ROLE_USER")
+        {
+        	user_service.createAdherent(user);
+        }
+        else user_service.createAdmin(user);
+        //user_repo.save(user);
         auth_repo.save(auth);
         return new ModelAndView("redirect:/");
     }

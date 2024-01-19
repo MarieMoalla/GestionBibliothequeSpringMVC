@@ -76,6 +76,14 @@ public class SecurityConfig {
                     .authenticated())
 				.exceptionHandling().accessDeniedPage("/notAuthorized");
 		
+			httpSecurity
+		    .sessionManagement()
+		        .maximumSessions(1)
+		        .maxSessionsPreventsLogin(true)
+		        .and()
+		    .sessionFixation().none();
+
+		
 		return httpSecurity.build();
 	}
 }

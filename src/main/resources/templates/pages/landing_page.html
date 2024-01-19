@@ -19,7 +19,7 @@
                         <div class='px-3 py-3 d-flex justify-content-between'>
                             <h3 class='card-title'>List Auteur</h3>
                             <div class="card-right d-flex align-items-center">
-                                <a th:href="@{/livres}">Access</a>
+                                <a th:href="@{/auteurs}">Access</a>
                             </div>
                         </div>
                         <div class="chart-wrapper">
@@ -147,7 +147,7 @@
 					            <td th:text="${user.nom}"></td>
 					            <td th:text="${user.prenom}"></td>
 					            <td th:text="${user.email}"></td>
-					            <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+					            <td th:if="${#authorization.expression('hasRole(''ADMIN'')') and #authentication.principal.username ne user.username}">
 					            <!-- Add buttons for delete and update -->
 					            <form th:action="@{'/user/delete/' + ${user.username}}" method="post">
 					                <input type="hidden" name="_method" value="delete" />
@@ -157,6 +157,7 @@
 					            </form>
 					            
 					            </td>
+					            <td th:if="${#authorization.expression('hasRole(''ADMIN'')') and #authentication.principal.username eq user.username}"></td>
                             </tr>
                             </tbody>
                         </table>

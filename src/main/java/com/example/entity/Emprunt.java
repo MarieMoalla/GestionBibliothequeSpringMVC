@@ -49,10 +49,6 @@ public class Emprunt implements Serializable{
 
 	    @DateTimeFormat(pattern = "yyyy-MM-dd")
 	    @Temporal(TemporalType.DATE)
-	    private Date dateFin=java.sql.Date.valueOf(LocalDate.now());;
-
-	    @DateTimeFormat(pattern = "yyyy-MM-dd")
-	    @Temporal(TemporalType.DATE)
 	    private Date dateRetour=java.sql.Date.valueOf(LocalDate.now());;
 
 	    private int nbCopies;

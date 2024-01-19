@@ -71,6 +71,8 @@ public class GestionBibliothequeApplication {
 
 	            jdbcUserDetailsManager.createUser(admin);
 	        }
+	        
+	       
 	    };
 	}
 

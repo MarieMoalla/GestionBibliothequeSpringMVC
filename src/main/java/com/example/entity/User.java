@@ -47,11 +47,10 @@ public class User implements UserDetails{
     private String password;
 
     @Column(name = "enabled", nullable = false)
-    private boolean enabled;
+    private boolean enabled = true;
 
     @Column(name = "dtype", nullable = false, insertable=false, updatable=false,columnDefinition = "VARCHAR(20) DEFAULT 'USER'")
     private String dtype;
-
 
    @Override
    public Collection<? extends GrantedAuthority> getAuthorities() {

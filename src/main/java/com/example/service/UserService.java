@@ -1,5 +1,6 @@
 package com.example.service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,12 +11,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.dao.IUserDAO;
 import com.example.entity.Adherent;
 import com.example.entity.Admin;
 import com.example.entity.Auteur;
+import com.example.entity.IAdherentDAO;
 import com.example.entity.Livre;
 import com.example.entity.User;
 
@@ -26,25 +31,13 @@ public class UserService implements IUserService{
 
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private IUserDAO user_repo;
     
-	/*//@Transactional délégue la gestion des transactions au conteneur IOC
-	@Transactional
-	@Override
-	public List<User> getUsers() {return userDAO.getUsers();}
-
-	@Transactional
-	@Override
-	public User getUser(int id) {return userDAO.getUser(id);}
-
-	@Transactional
-	@Override
-	public void saveUser(User user) {userDAO.saveUser(user);}
-
-	@Transactional
-	@Override
-	public void deleteUser(int id) {userDAO.deleteUser(id);}
-
-*/
+    @Autowired
+    private IAdherentDAO adherent_repo;
+    
 	@Transactional
 	@Override
 	public User getUserByUsername(String username) {
@@ -78,5 +71,36 @@ public class UserService implements IUserService{
 
         return userPage;
 	}
+	
+	public void createAdherent (User ad)
+	{
+		User adherent = Adherent.builder()
+                .username(ad.getUsername())
+                .password(passwordEncoder().encode(ad.getPassword()))
+                .enabled(true)
+                .abonnementDateExp(java.sql.Date.valueOf(LocalDate.now().plusYears(1)))
+                .dtype("USER") 
+                .build();
+		adherent.setNom(ad.getNom());
+		adherent.setPrenom(ad.getPrenom());
+		adherent.setEmail(ad.getEmail());
+		user_repo.save(adherent);
+	}
+	
+	public void createAdmin (User ad)
+	{
+		User admin =   Admin.builder()
+                .username(ad.getUsername())
+                .password(passwordEncoder().encode(ad.getPassword()))
+                .enabled(true)
+                .dtype("ADMIN")  // Set dtype manually
+                .build();
+		admin.setNom(ad.getNom());
+		admin.setPrenom(ad.getPrenom());
+		admin.setEmail(ad.getEmail());
+		user_repo.save(admin);
+	}
+	
+	PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
 
 }
